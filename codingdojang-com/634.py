@@ -10,11 +10,26 @@ f = open(filenm,'r')
 readlns = f.readlines()
 f.close
 
-print(readlns)
+#print(readlns)
 words = []
 for readln in readlns:
-    readln.replace(',',' ').replace('.', ' ')
-    words.append(readln.split(' '))
+    print("readln", readln)
+    tmp = readln.replace(',','').replace('.', '').replace('\n','').split(' ')
+    print("tmp", tmp)
+    words.extend(tmp)
 print(words)    
 
-<< 미완성 >>
+dic = {}
+for word in words:
+    if word in dic:
+        dic[word] += 1
+    else:
+        dic[word] = 1
+#print(dic)
+#print(dic.items())
+
+lst = sorted(dic.items(), key=lambda k: k[1], reverse=True )
+#print("----- lst\n",lst)
+for w, c in lst[:10]:
+    print(w,c)
+
