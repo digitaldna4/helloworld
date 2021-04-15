@@ -4,13 +4,47 @@
     Lv. 3
     
     202010414
-    (완성 못함)
+    (보고 따라 함 --> 아직 이해 못함)
 """
 
-m, n = map(int, input('Enter M, N: ').split())
+import random
+
+m, n = map(int, input("Enter M, N: ").split(","))
 print("m",m)
 print("n",n)
+#minelist = ["*","."]
 
+mn = [[random.choice(['.','.','.','.','*']) for x in range(n)] for y in range(m)]
+for y in mn:
+    print(''.join(y))
+r = mn.copy()
+for y, yd in enumerate(r):
+    for x, xd in enumerate(yd):
+        if r[y][x] == '*': continue
+        count = 0
+        c = [[''] if y - 1 < 0 else r[y-1][0 if x - 1 < 0 else x - 1:x+2],
+             r[y][0 if x - 1 < 0 else x - 1:x+2],             
+             [''] if y + 1 >= m else r[y+1][0 if x - 1 < 0 else x - 1:x+2]]
+        for z in c:
+            count+=z.count('*')
+        r[y][x] = str(count)
+
+print("output")
+for y in r:
+    print(''.join(y))  
+
+"""    
+mn = []
+for x in range(m):
+    tmp = []
+    for y in range(n):
+        tmp += random.choice(minelist)
+    mn += tmp
+
+print("mn", mn)
+"""
+
+"""
 q = []
 for _ in range(m):
     q.append(list(input()))
@@ -27,3 +61,4 @@ for i in range(m): # 1
                         count += 1
             print(count, end='')
     print()
+"""
