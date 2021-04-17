@@ -1,7 +1,7 @@
 """
     나도코딩
     메모리게임 - 보고 따라하기
-    https://youtu.be/Qsk-xsi73YA
+    https://youtu.be/Qsk-xsi73YA 
 """
 
 import pygame
