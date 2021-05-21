@@ -5,19 +5,38 @@
 """
 
 import tkinter.ttk as ttk
-from tkinter import *
+from tkinter import *   # __all__ 
+from tkinter import filedialog  # 서브 모듈이기 때문에..
 
 root = Tk()
 root.title("Hello Project GUI")
 
+
+# 파일 추가
+def add_file():
+    files = filedialog.askopenfilenames(title="이미지 파일을 선택하세요", \
+        filetypes=(("PNG 파일", "*.png"), ("모든 파일", "*.*")), \
+        initialdir=r"d:\Workspaces\HelloWorld\helloworld\nadocoding_pygame_project\images")
+    
+    for file in files:
+        #print(file)
+        list_file.insert(END, file)
+
+# 선택 삭제
+def del_file():
+    #print(list_file.curselection())
+    for index in reversed(list_file.curselection()):
+        list_file.delete(index)
+
+        
 # 파일 프레임 (파일 추가, 선택 삭제 버튼)
 file_frame = Frame(root)
 file_frame.pack(fill="x", padx=5, pady=5)
 
-btn_add_file = Button(file_frame, padx=5, pady=5, width=12, text="파일 추가")
+btn_add_file = Button(file_frame, padx=5, pady=5, width=12, text="파일 추가", command=add_file)
 btn_add_file.pack(side="left")
 
-btn_del_file = Button(file_frame, padx=5, pady=5, width=12, text="선택 삭제")
+btn_del_file = Button(file_frame, padx=5, pady=5, width=12, text="선택 삭제", command=del_file)
 btn_del_file.pack(side="right")
 
 
