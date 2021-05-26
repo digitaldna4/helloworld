@@ -37,22 +37,38 @@ def browse_dest_path():
 def merge_image():
     #print(list_file.get(0, END))
     images = [Image.open(x) for x in list_file.get(0, END)]
-    widths = [x.size[0] for x in images]
-    heights = [x.size[1] for x in images]
+    # widths = [x.size[0] for x in images]
+    # heights = [x.size[1] for x in images]
     # print("width : ", widths)
     # print("height : ", heights)
+
+    widths, heights = zip(*(x.size for x in images))
+    
+
 
     max_width, total_height = max(widths), sum(heights)
     print("max width :", max_width)
     print("total height : ", total_height)
 
-    result_img = Image.new("RGM", (max_width, total_height), (255, 255, 255))
+    result_img = Image.new("RGB", (max_width, total_height), (255, 255, 255))
     y_offset = 0    # y위치
-    for img in images:
-        result_img.paste(img, (o, y_offset))
+    # for img in images:
+    #     result_img.paste(img, (0, y_offset))
+    #     y_offset += img.size[1]
+
+    for idx, img in enumerate(images):
+        result_img.paste(img, (0, y_offset))
         y_offset += img.size[1]
 
+        progress = (idx + 1) / len(images) * 100        # 실제 percent 정보 계산
+        p_var.set(progress)
+        progress_bar.update()
+
+
     dest_path = os.path.join(txt_dest_path.get(), "hello_photo.jpg")
+    result_img.save(dest_path)
+    msgbox.showinfo("알림", "작업이 완료되었습니다.")
+
 
 # 시작
 def start():
