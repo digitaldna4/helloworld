@@ -27,7 +27,8 @@ def add_file():
 # 저장 경로
 def browse_dest_path():
     folder_selected = filedialog.askdirectory()
-    if folder_selected is None: # 사용자가 취소를 누를때
+    if folder_selected == ""''"": # 사용자가 취소를 누를때
+        print("폴더 선택 취소")
         return
     #print(folder_selected)
     txt_dest_path.delete(0, END)
@@ -37,86 +38,89 @@ def browse_dest_path():
 def merge_image():
     #print(list_file.get(0, END))
 
-    # 가로 넓이
-    img_width = cmb_width.get()
-    if img_width == "원본유지":
-        img_width = -1
-    else:
-        img_width = int(img_width)
+    try:
+        # 가로 넓이
+        img_width = cmb_width.get()
+        if img_width == "원본유지":
+            img_width = -1
+        else:
+            img_width = int(img_width)
 
-    # 간격
-    img_space = cmb_space.get()
-    if img_space == "좁게":
-        img_space = 30
-    elif img_space == "보통":
-        img_space = 60
-    elif img_space == "넓게":
-        img_space = 90
-    else:
-        img_space = 0
+        # 간격
+        img_space = cmb_space.get()
+        if img_space == "좁게":
+            img_space = 30
+        elif img_space == "보통":
+            img_space = 60
+        elif img_space == "넓게":
+            img_space = 90
+        else:
+            img_space = 0
 
-    # 포맷
-    img_format = cmb_format.get().lower()   # PNG, JPG, BNP 값을 받아와서 소문자로 변경
-
-
-
-    images = [Image.open(x) for x in list_file.get(0, END)]
-    # widths = [x.size[0] for x in images]
-    # heights = [x.size[1] for x in images]
-    # print("width : ", widths)
-    # print("height : ", heights)
-
-    # 이미지 사이즈를 리스트에 넣어서 하나씩 처리
-    image_sizes = []        # [(width1, height1), (width2, height2) ..
-    if img_width > -1:
-        # width 값 변경
-        image_sizes = [(int(img_width), int(img_width * x.size[1] / x.size[0])) for x in images]
-    else:
-        # 원본 사이즈 사용
-        image_sizes = [(x.size[0], x.size[1]) for x in images]
-
-    # 계산식
-    # 100*60 --> 80으로 줄이면?
-    # 원본 width : 원보 height = 변경 width : 변경 height
+        # 포맷
+        img_format = cmb_format.get().lower()   # PNG, JPG, BNP 값을 받아와서 소문자로 변경
 
 
 
-    #widths, heights = zip(*(x.size for x in images))
-    widths, heights = zip(*(image_sizes))
+        images = [Image.open(x) for x in list_file.get(0, END)]
+        # widths = [x.size[0] for x in images]
+        # heights = [x.size[1] for x in images]
+        # print("width : ", widths)
+        # print("height : ", heights)
 
-
-    max_width, total_height = max(widths), sum(heights)
-    print("max width :", max_width)
-    print("total height : ", total_height)
-
-    # 스케치북 준비
-    if img_space >0:    # 이미지 간격 옵션 적용
-        total_height += (img_space * (len(images) -1))
-
-    result_img = Image.new("RGB", (max_width, total_height), (255, 255, 255))
-    y_offset = 0    # y위치
-    # for img in images:
-    #     result_img.paste(img, (0, y_offset))
-    #     y_offset += img.size[1]
-
-    for idx, img in enumerate(images):
-        # width가 원본이 아닐경우 이미 크기 조정
+        # 이미지 사이즈를 리스트에 넣어서 하나씩 처리
+        image_sizes = []        # [(width1, height1), (width2, height2) ..
         if img_width > -1:
-            img = img.resize(image_sizes[idx])
+            # width 값 변경
+            image_sizes = [(int(img_width), int(img_width * x.size[1] / x.size[0])) for x in images]
+        else:
+            # 원본 사이즈 사용
+            image_sizes = [(x.size[0], x.size[1]) for x in images]
 
-        result_img.paste(img, (0, y_offset))
-        y_offset += (img.size[1] + img_space) # height 값 + 사용자가 지정한 간격
+        # 계산식
+        # 100*60 --> 80으로 줄이면?
+        # 원본 width : 원보 height = 변경 width : 변경 height
 
-        progress = (idx + 1) / len(images) * 100        # 실제 percent 정보 계산
-        p_var.set(progress)
-        progress_bar.update()
 
-    # 모팻 옵션 처리
-    file_name = "hello_photo." + img_format
-    dest_path = os.path.join(txt_dest_path.get(), file_name)
-    result_img.save(dest_path)
-    msgbox.showinfo("알림", "작업이 완료되었습니다.")
 
+        #widths, heights = zip(*(x.size for x in images))
+        widths, heights = zip(*(image_sizes))
+
+
+        max_width, total_height = max(widths), sum(heights)
+        print("max width :", max_width)
+        print("total height : ", total_height)
+
+        # 스케치북 준비
+        if img_space >0:    # 이미지 간격 옵션 적용
+            total_height += (img_space * (len(images) -1))
+
+        result_img = Image.new("RGB", (max_width, total_height), (255, 255, 255))
+        y_offset = 0    # y위치
+        # for img in images:
+        #     result_img.paste(img, (0, y_offset))
+        #     y_offset += img.size[1]
+
+        for idx, img in enumerate(images):
+            # width가 원본이 아닐경우 이미 크기 조정
+            if img_width > -1:
+                img = img.resize(image_sizes[idx])
+
+            result_img.paste(img, (0, y_offset))
+            y_offset += (img.size[1] + img_space) # height 값 + 사용자가 지정한 간격
+
+            progress = (idx + 1) / len(images) * 100        # 실제 percent 정보 계산
+            p_var.set(progress)
+            progress_bar.update()
+
+        # 모팻 옵션 처리
+        file_name = "hello_photo." + img_format
+        dest_path = os.path.join(txt_dest_path.get(), file_name)
+        result_img.save(dest_path)
+        msgbox.showinfo("알림", "작업이 완료되었습니다.")
+    
+    except Exception as err:
+        msgbox.showerror("에러", err)
 
 # 시작
 def start():
