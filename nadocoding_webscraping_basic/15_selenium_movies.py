@@ -23,7 +23,7 @@ res = requests.get(url, headers=headers)
 res.raise_for_status()
 soup = BeautifulSoup(res.text, "lxml")
 
-movies = soup.find_all("div", attrs={"class":"ImZGtf mpg4gc"})
+movies = soup.find_all("div", attrs={"class":"ImZGtf mpg5gc"})
 print(len(movies))
 
 # with open("movie.html", "w", encoding="utf8") as f:
