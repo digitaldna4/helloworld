@@ -40,30 +40,44 @@ while True:
 
 print("스크롤 완료")
 
+import requests
+from bs4 import BeautifulSoup
 
-# # from selenium import webdriver
-# # from selenium.webdriver.chrome.webdriver import WebDriver
-# # from selenium.webdriver.common.by import By
-# # from selenium.webdriver.support.ui import WebDriverWait
-# # from selenium.webdriver.support import expected_conditions as EC
+soup = BeautifulSoup(browser.page_source, "lxml")
 
-# url = "https://play.google.com/store/movies/top"
-# headers = {
-#     "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36",
-#     "Accept-Language":"ko-KR, ko"
-#     }
+#movies = soup.find_all("div", attrs={"class":["ImZGtf mpg5gc", "Vpfmgd"]})
+movies = soup.find_all("div", attrs={"class":"Vpfmgd"})
+print(len(movies))
 
-# res = requests.get(url, headers=headers)
-# res.raise_for_status()
-# soup = BeautifulSoup(res.text, "lxml")
+for movie in movies:
+    title = movie.find("div", attrs={"class":"WsMG1c nnK0zc"}).get_text()
+    print(title)
 
-# movies = soup.find_all("div", attrs={"class":"ImZGtf mpg5gc"})
-# print(len(movies))
+    # 할인 전 가격
+    original_price = movie.find("span", attrs={"class":"SUt4c djCuy"})
+    if original_price:
+        original_price = original_price.get_text()
+    else:
+        print(title, "<할인 되지 않은 영화 제외>")
+        continue
 
-# # with open("movie.html", "w", encoding="utf8") as f:
-# #     # f.write(res.text)
-# #     f.write(soup.prettify())    # html 문서를 예쁘게..
+    # 할인된 가격
+    price = movie.find("span", attrs={"class":"VfPpfd ZdBevf i5DZme"})
 
-# for movie in movies:
-#     title = movie.find("div", attrs={"class":"WsMG1c nnK0zc"}).get_text()
-#     print(title)
+    # 링크
+    link = movie.find("a", attrs={"class":"JC71ub"})["href"]
+
+    print(f"제목 : {title}")
+    print(f"할인 전 금액 : {original_price}")
+    print(f"할인 후 금액 : {price}")
+    print("링크 : ", "https://play.google.com"+link)
+    print("-"*120)
+
+browser.quit()
+
+
+
+# [22704:22724:0623/215252.669:ERROR:device_event_log_impl.cc(214)] [21:52:52.668] USB: usb_device_handle_win.cc:1058 Failed to read descriptor from node connection: A device attached to the system is not functioning. (0x1F)
+
+
+
