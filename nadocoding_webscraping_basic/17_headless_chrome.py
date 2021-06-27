@@ -4,9 +4,13 @@
     https://youtu.be/yQ20jZwDjTE
 """
 
-from logging import currentframe
 from selenium import webdriver
-browser = webdriver.Chrome("d:/Workspaces/HelloWorld/helloworld/chromedriver_win32/chromedriver.exe")
+
+options = webdriver.ChromeOptions()
+options.headless = True
+options.add_argument("windows-size=1920x1080")
+
+browser = webdriver.Chrome("d:/Workspaces/HelloWorld/helloworld/chromedriver_win32/chromedriver.exe", options=options)
 browser.maximize_window()
 
 # 페이지 이동
@@ -39,6 +43,7 @@ while True:
         break
 
 print("스크롤 완료")
+browser.get_screenshot_as_file("google_movie.png")
 
 import requests
 from bs4 import BeautifulSoup
